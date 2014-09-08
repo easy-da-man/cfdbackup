@@ -6,7 +6,11 @@
 
 package cfd.backupper;
 
+import cfd.backupper.observer.FileCopiedObserver;
+import cfd.backupper.observer.ProgressBarObserver;
+import cfd.backupper.observer.Subject;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.DirectoryStream;
@@ -18,8 +22,12 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
+import javafx.concurrent.Task;
+import javafx.event.EventHandler;
+import javafx.event.EventType;
 import javax.swing.JFileChooser;
 import javax.swing.JTextField;
+import javax.swing.SwingWorker;
 import javax.swing.text.JTextComponent;
 
 /**
@@ -31,7 +39,14 @@ public class MainForm extends javax.swing.JFrame {
     /**
      * Creates new form MainForm
      */
+    
+    ProgressBarObserver pbo = new ProgressBarObserver();
+    FileCopiedObserver fco = new FileCopiedObserver();
+    Logger myLogger;
+    
     public MainForm() {
+        
+        
         initComponents();
     }
 
@@ -68,6 +83,7 @@ public class MainForm extends javax.swing.JFrame {
 
         jTextArea2.setColumns(20);
         jTextArea2.setRows(5);
+        myLogger = new Logger(jTextArea2);
         jScrollPane2.setViewportView(jTextArea2);
 
         jLabel2.setText("Konsole");
@@ -158,55 +174,106 @@ public class MainForm extends javax.swing.JFrame {
             jTextArea1.setEnabled(false);
             
             //This is where a real application would open the file.
-            Logger.log(jTextArea2, "Opening: " + file.getAbsolutePath());
+            Logger.log("Opening: " + file.getAbsolutePath());
             
         } else {
-            Logger.log(jTextArea2, "Open command cancelled by user.");
+            Logger.log( "Open command cancelled by user.");
         }
    
 
         
-        ArrayList<Path> paths = new ArrayList<Path>();
-        Path path = Paths.get("/home/edm");
-        try
-        {
-          DirectoryStream<Path> stream;
-          stream = Files.newDirectoryStream(path);
-          for (Path entry : stream)
-          {
-            paths.add(entry);
-          }
-          stream.close();
-        }
-        catch (IOException e)
-        {
-          e.printStackTrace();
-        }
-        ArrayList<File> upperfiles = new ArrayList<>();
-        List<String> uppercasedPaths = paths.stream().map(f -> f.toString().toUpperCase()).collect(Collectors.toList());
-        uppercasedPaths.stream().forEach(a -> upperfiles.add(new File(a)));
-        for (Path entry: paths)
-        {
-          Component c = new JTextField(entry.getFileName().toString());
-          
-        }
+//        ArrayList<Path> paths = new ArrayList<Path>();
+//        Path path = Paths.get("/home/edm");
+//        try
+//        {
+//          DirectoryStream<Path> stream;
+//          stream = Files.newDirectoryStream(path);
+//          for (Path entry : stream)
+//          {
+//            paths.add(entry);
+//          }
+//          stream.close();
+//        }
+//        catch (IOException e)
+//        {
+//          e.printStackTrace();
+//        }
+//        ArrayList<File> upperfiles = new ArrayList<>();
+//        List<String> uppercasedPaths = paths.stream().map(f -> f.toString().toUpperCase()).collect(Collectors.toList());
+//        uppercasedPaths.stream().forEach(a -> upperfiles.add(new File(a)));
+//        for (Path entry: paths)
+//        {
+//          Component c = new JTextField(entry.getFileName().toString());
+//          
+//        }
         
         
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        Consumer c = new Consumer() {
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        jProgressBar1.setIndeterminate(true);
+        jButton1.setEnabled(false);
+        
+        class MySyncer extends SwingWorker<Object, Void> {
             @Override
-            public void accept(Object t) {
-                //System.out.println(t);
+            protected Object doInBackground(){
+                DirContainer.sync();
+                return null;
             }
-        };
-        DirContainer.getDirs().stream().forEach(f->c.accept(f));
-        try {
-            DirContainer.listFiles();
-        } catch (IOException ex) {
-            java.util.logging.Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+            @Override
+            protected void done(){
+                jButton1.setEnabled(true);
+            }
         }
+        
+        class MyWorker extends SwingWorker<Object, Void> {
+            
+            @Override
+            protected Object doInBackground(){
+                 //new Thread (() -> {
+                DirContainer.countFiles();
+                 //}).start();
+                return null;
+            }
+            @Override
+            protected void done() {
+                System.out.println("DDDASDFASDFASDF");
+                jProgressBar1.setVisible(true);
+                jProgressBar1.setIndeterminate(false);
+                jProgressBar1.setValue(0);
+                jProgressBar1.setMaximum(DirContainer.getCountedFiles());
+                new MySyncer().execute();
+            }
+        }
+        new MyWorker().execute();
+       
+        
+        
+      
+       
+      
+       
+       Subject<Path> subject = new Subject<>();
+       fco.setSubject(subject);
+       subject.setState(Paths.get("whatever"));
+        
+        
+        
+        
+        
+        
+        //DirContainer.getDirs().stream().forEach(f->c.accept(f));
+//        try {
+//            DirContainer.listFiles();
+//        } catch (IOException ex) {
+//            java.util.logging.Logger.getLogger(MainForm.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        
+        System.out.println();
+        
+       
+        this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }//GEN-LAST:event_jButton1ActionPerformed
 
     /**

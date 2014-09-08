@@ -14,7 +14,13 @@ import javax.swing.JTextArea;
  */
 public class Logger {
     
-    public static void log(JTextArea area, String content) {
-        area.append(content+"\n");
+    private static JTextArea loggableField;
+    
+    public Logger(JTextArea logField) {
+        loggableField = logField;
+    }
+    
+    public static void log(String content) {
+        loggableField.append(content+"\n");
     }
 }
