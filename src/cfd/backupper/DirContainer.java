@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -67,7 +68,7 @@ public class DirContainer {
         });
     }
     
-    public static void countFiles() {
+    public static int countFiles() {
         filesCounted = false;
         filesToBackup.clear();
         dirsToBackup.forEach(dir -> {
@@ -75,23 +76,26 @@ public class DirContainer {
                 Files.walk(Paths.get(dir.toString())).forEach(filePath -> {
                     
                     if (Files.isRegularFile(filePath)) {
+                       
                         filesToBackup.add(filePath.toFile());
+                        
                         //progressBar.setState(filesToBackup.size());
                         //cfd.backupper.Logger.log(Integer.toString(filesToBackup.size()));
                     }
                 });
             } catch (IOException | java.io.UncheckedIOException ex) {
-                Logger.getLogger(DirContainer.class.getName()).log(Level.SEVERE, null, ex);
+                //Logger.getLogger(DirContainer.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
+        
+        
         progressBar.setState(filesToBackup.size());
-        System.out.println("FC"+filesCounted);
         filesCounted = true;
-        System.out.println("FC"+filesCounted);
+        return filesToBackup.size();
     }
     
     public static void sync() {
-        System.out.println("syncer");
+        System.out.println("sync()");
         while (filesCounted != true) {
             
         }

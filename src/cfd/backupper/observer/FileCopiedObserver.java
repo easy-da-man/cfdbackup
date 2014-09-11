@@ -6,6 +6,11 @@
 
 package cfd.backupper.observer;
 
+import cfd.backupper.state.Operations;
+import cfd.backupper.uilogger.JTextAreaLogger;
+import cfd.backupper.uilogger.JTextFieldLogger;
+import cfd.backupper.uilogger.LoggaLogic;
+import cfd.backupper.uilogger.Logger;
 import java.nio.file.Path;
 
 /**
@@ -16,10 +21,14 @@ import java.nio.file.Path;
 public class FileCopiedObserver<Path> extends Observer {
     
     protected Subject subject = null;
+    JTextAreaLogger textAreaLogger = new JTextAreaLogger();
+    JTextFieldLogger textFieldLogger = new JTextFieldLogger();
 
     @Override
     public Object update(Object t) {
-        System.out.println("The path is:"+ ((Path) t).toString());
+        //System.out.println("The path is:"+ ((Path) t).toString());
+        Logger.log("Copied: " + ((Path) t).toString(), textAreaLogger);
+        Logger.log(Integer.toString(Operations.getFileCopyOperations()), textFieldLogger);
         return (Path) t;
     }
 
