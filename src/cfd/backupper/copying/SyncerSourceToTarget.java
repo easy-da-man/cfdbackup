@@ -9,15 +9,16 @@ package cfd.backupper.copying;
 import cfd.backupper.observer.FileCopiedObserver;
 import cfd.backupper.observer.Subject;
 import cfd.backupper.state.Operations;
+import cfd.backupper.state.StartupConfig;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
-
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,7 +39,13 @@ public class SyncerSourceToTarget {
     }
     
     public void sync(ArrayList<File> files){
-        File targetDir = new File(System.getProperty("user.home")+File.separator+"testSync"+File.separator+"stuff");
+        //File targetDir = new File(System.getProperty("user.home")+File.separator+"testSync"+File.separator+"stuff");
+        String name = (String)((List)StartupConfig.getSetting("TARGETDIRS")).get(0);
+        name = name.concat(File.separator+"UltraBackup");
+        File targetDir = new File(name);
+        System.out.println(name);
+                
+        //targetDir = new File(((List)StartupConfig.getSetting("TARGETDIRS").get(0))).getParent().toString();
         //File targetDir = new File("G:\\testSync");
         System.out.println(targetDir.toString());
         System.out.println(targetDir.toPath());
@@ -54,7 +61,7 @@ public class SyncerSourceToTarget {
         files.stream().parallel().forEach(file -> {
             try {
                 Path relative = Paths.get(file.toURI()).subpath(0, Paths.get(file.toURI()).getNameCount());
-                Path target = Paths.get(targetDir+"\\"+relative);
+                Path target = Paths.get(targetDir+File.separator+relative);
                 //System.out.println(target.toAbsolutePath());
                 
                 Files.createDirectories(target.getParent());

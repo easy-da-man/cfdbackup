@@ -6,6 +6,7 @@
 
 package cfd.backupper.observer;
 
+import cfd.backupper.MainForm;
 import cfd.backupper.state.Operations;
 import cfd.backupper.uilogger.JTextAreaLogger;
 import cfd.backupper.uilogger.JTextFieldLogger;
@@ -29,6 +30,7 @@ public class FileCopiedObserver<Path> extends Observer {
         //System.out.println("The path is:"+ ((Path) t).toString());
         Logger.log("Copied: " + ((Path) t).toString(), textAreaLogger);
         Logger.log(Integer.toString(Operations.getFileCopyOperations()), textFieldLogger);
+        MainForm.jProgressBar1.setValue(Operations.getFileCopyOperations());
         return (Path) t;
     }
 

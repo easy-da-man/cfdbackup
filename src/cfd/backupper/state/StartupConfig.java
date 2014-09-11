@@ -78,8 +78,12 @@ public class StartupConfig {
         }
     }
     
+    public static List getSetting(String key){
+        return (List)jo.get(key);
+    }
+    
     private static JSONObject deserializeConfFile(){
-        JSONObject jsonObject = null;
+        JSONObject jsonObject = new JSONObject();
         JSONParser jsonParser = new JSONParser();
         try {
             FileReader fr = new FileReader(confFile);

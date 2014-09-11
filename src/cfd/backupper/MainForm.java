@@ -17,7 +17,10 @@ import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.List;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.DefaultCaret;
@@ -39,6 +42,8 @@ public class MainForm extends javax.swing.JFrame {
     public MainForm() {
         
         initComponents();
+        ImageIcon ii = new ImageIcon("assets"+File.separator+"img"+File.separator+"icon"+File.separator+"awesome-1.png");
+        this.setIconImage(ii.getImage());
     }
 
     /**
@@ -61,9 +66,13 @@ public class MainForm extends javax.swing.JFrame {
         jScrollPane5 = new javax.swing.JScrollPane();
         jTable2 = new javax.swing.JTable();
         jTextField1 = new javax.swing.JTextField();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextArea3 = new javax.swing.JTextArea();
+        jLabel3 = new javax.swing.JLabel();
         jMenuBar2 = new javax.swing.JMenuBar();
         jMenu3 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -99,7 +108,7 @@ public class MainForm extends javax.swing.JFrame {
 
             },
             new String [] {
-                "Verzeichnis", "Quantum"
+                "Verzeichnis", "Anzahl Dateien"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -120,6 +129,12 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
 
+        jTextArea3.setColumns(20);
+        jTextArea3.setRows(5);
+        jScrollPane3.setViewportView(jTextArea3);
+
+        jLabel3.setText("Ziel-Verzeichnis");
+
         jMenu3.setText("File");
 
         jMenuItem1.setText("Add path");
@@ -129,6 +144,14 @@ public class MainForm extends javax.swing.JFrame {
             }
         });
         jMenu3.add(jMenuItem1);
+
+        jMenuItem2.setText("Target dir");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem2);
 
         jMenuBar2.add(jMenu3);
 
@@ -143,19 +166,24 @@ public class MainForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 481, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGap(18, 18, 18)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(10, 10, 10)
+                                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 323, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel3))))
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton1)
+                        .addGap(0, 24, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -164,19 +192,22 @@ public class MainForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(27, 27, 27)
-                        .addComponent(jLabel1)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel3))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton1)))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(25, 25, 25)
-                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(47, 47, 47)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jButton1, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))))
                 .addGap(18, 18, 18)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(5, 5, 5)
+                .addGap(14, 14, 14)
                 .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 260, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 251, Short.MAX_VALUE)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -208,7 +239,7 @@ public class MainForm extends javax.swing.JFrame {
             File file = fc.getSelectedFile();
             DirContainer.addDir(file);
             StartupConfig.putSetting("BACKUPDIRS", DirContainer.getDirs());
-            StartupConfig.putSetting("Mussktwup", Arrays.asList(new String[]{"1"}));
+            //StartupConfig.putSetting("Mussktwup", Arrays.asList(new String[]{"1"}));
             //File file = fc.getCurrentDirectory();
             //File f2 = fc.getSelectedFile().getAbsolutePath()
             jTextArea1.append(fc.getSelectedFile().getAbsolutePath()+"\n");
@@ -255,47 +286,52 @@ public class MainForm extends javax.swing.JFrame {
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-        jProgressBar1.setIndeterminate(true);
-        jButton1.setEnabled(false);
-        Subject<Path> subject = new Subject<>();
         
-        subject.register(fco);
-        
-        
-        
-        class MySyncer extends SwingWorker<Object, Void> {
-            @Override
-            protected Object doInBackground(){
-                DirContainer.sync();
-                return null;
+        List targetDirs = StartupConfig.getSetting("TARGETDIRS");
+        if (targetDirs.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "My Goodness, this is so concise");
+        } else {
+            this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            //jProgressBar1.setIndeterminate(true);
+            jButton1.setEnabled(false);
+            Subject<Path> subject = new Subject<>();
+
+            subject.register(fco);
+
+
+
+            class MySyncer extends SwingWorker<Object, Void> {
+                @Override
+                protected Object doInBackground(){
+                    DirContainer.sync();
+                    return null;
+                }
+                @Override
+                protected void done(){
+                    jButton1.setEnabled(true);
+                    //jProgressBar1.setIndeterminate(false);
+                }
             }
-            @Override
-            protected void done(){
-                jButton1.setEnabled(true);
-                jProgressBar1.setIndeterminate(false);
+
+            class MyWorker extends SwingWorker<Object, Void> {
+
+                @Override
+                protected Object doInBackground(){
+                     //new Thread (() -> {
+                    //DirContainer.countFiles();
+                     //}).start();
+                    return null;
+                }
+                @Override
+                protected void done() {
+                    jProgressBar1.setVisible(true);
+                    jProgressBar1.setValue(0);
+                    jProgressBar1.setMaximum(DirContainer.getCountedFiles());
+                    new MySyncer().execute();
+                }
             }
+            new MyWorker().execute();
         }
-        
-        class MyWorker extends SwingWorker<Object, Void> {
-            
-            @Override
-            protected Object doInBackground(){
-                 //new Thread (() -> {
-                //DirContainer.countFiles();
-                 //}).start();
-                return null;
-            }
-            @Override
-            protected void done() {
-                jProgressBar1.setVisible(true);
-                jProgressBar1.setValue(0);
-                jProgressBar1.setMaximum(DirContainer.getCountedFiles());
-                new MySyncer().execute();
-            }
-        }
-        new MyWorker().execute();
-       
         
         
       
@@ -303,7 +339,7 @@ public class MainForm extends javax.swing.JFrame {
       
        
        
-       subject.setState(Paths.get("whatever"));
+       
         
         
         
@@ -331,6 +367,28 @@ public class MainForm extends javax.swing.JFrame {
     private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        
+        final JFileChooser fc = new JFileChooser();fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            File file = fc.getSelectedFile();
+            DirContainer.addDir(file);
+            StartupConfig.putSetting("TARGETDIRS", Arrays.asList(new File(fc.getSelectedFile().toString())));
+            //StartupConfig.putSetting("Mussktwup", Arrays.asList(new String[]{"1"}));
+            //File file = fc.getCurrentDirectory();
+            //File f2 = fc.getSelectedFile().getAbsolutePath()
+            jTextArea3.append(fc.getSelectedFile().getAbsolutePath()+"\n");
+            //jTextArea1.setEnabled(false);
+            
+            //this.invalidate();
+            //this.repaint();
+            
+            
+ 
+            
+        } 
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -371,16 +429,20 @@ public class MainForm extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar2;
     private javax.swing.JMenuItem jMenuItem1;
-    private javax.swing.JProgressBar jProgressBar1;
+    private javax.swing.JMenuItem jMenuItem2;
+    public static javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JTable jTable2;
     private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextArea jTextArea2;
+    private javax.swing.JTextArea jTextArea3;
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }
