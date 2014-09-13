@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package cfd.backupper;
+package cfd.backupper.fileoperation;
 
 import cfd.backupper.copying.SyncerSourceToTarget;
 import cfd.backupper.observer.FileCopiedObserver;
@@ -16,7 +16,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -39,6 +38,7 @@ public class DirContainer {
     }
     
     static boolean filesCounted = false;
+    static int size = 0;
     
     public static void addDir(File dir) {
         dirsToBackup.add(dir);
@@ -53,8 +53,6 @@ public class DirContainer {
     }
     
     public static void listFiles() throws IOException{
-        
-        
         dirsToBackup.forEach(dir -> {
             try {
                 Files.walk(Paths.get(dir.toString())).forEach(filePath -> {
@@ -73,11 +71,18 @@ public class DirContainer {
         filesToBackup.clear();
         dirsToBackup.forEach(dir -> {
             try {
-                Files.walk(Paths.get(dir.toString())).forEach(filePath -> {
-                    
+                Files.walk(Paths.get(dir.toString())).parallel().forEach(filePath -> {
                     if (Files.isRegularFile(filePath)) {
-                       
-                        filesToBackup.add(filePath.toFile());
+                        synchronized(filesToBackup){
+                            filesToBackup.add(filePath.toFile());
+                            size+=filePath.toFile().length();
+                        }
+                        try {
+                            System.out.println(filePath.toString());
+                            System.out.println(Files.readAttributes(filePath, "*"));
+                        } catch (IOException ex) {
+                            Logger.getLogger(DirContainer.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                         
                         //progressBar.setState(filesToBackup.size());
                         //cfd.backupper.Logger.log(Integer.toString(filesToBackup.size()));
@@ -87,6 +92,8 @@ public class DirContainer {
                 //Logger.getLogger(DirContainer.class.getName()).log(Level.SEVERE, null, ex);
             }
         });
+        
+        System.out.println(size);
         
         
         progressBar.setState(filesToBackup.size());

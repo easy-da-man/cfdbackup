@@ -6,7 +6,7 @@
 
 package cfd.backupper.workers;
 
-import cfd.backupper.DirContainer;
+import cfd.backupper.fileoperation.DirContainer;
 import java.util.ArrayList;
 import javax.swing.SwingWorker;
 
@@ -42,6 +42,4 @@ public class CountAllFilesInDirectory extends SwingWorker<Object, Object> {
     public static int getCount(){
         return count;
     }
-    
-    
 }

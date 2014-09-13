@@ -74,7 +74,7 @@ public class SyncerSourceToTarget {
                     subject.setState(relative);
                 }
                 catch(FileAlreadyExistsException e) {
-                    //System.out.println("File exists");
+                    System.out.println("File exists");
                 }
                 //File copy = new File(targetDir+"\"+rel)
                 //System.out.println(relative);
