@@ -7,6 +7,7 @@
 package cfd.backupper.workers;
 
 import cfd.backupper.fileoperation.DirContainer;
+import java.io.File;
 import java.util.ArrayList;
 import javax.swing.SwingWorker;
 
@@ -26,7 +27,7 @@ public class CountAllFilesInDirectory extends SwingWorker<Object, Object> {
     //to return a compute a correct value.
     //value.
     static ArrayList<Integer> lastCounts = new ArrayList<Integer>();
-    public CountAllFilesInDirectory(){}
+    public CountAllFilesInDirectory(File dir){}
     
     @Override
     protected Object doInBackground() throws Exception {

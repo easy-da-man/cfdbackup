@@ -66,6 +66,8 @@ public class DirContainer {
         });
     }
     
+    
+    
     public static int countFiles() {
         filesCounted = false;
         filesToBackup.clear();

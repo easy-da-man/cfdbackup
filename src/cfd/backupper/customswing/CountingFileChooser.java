@@ -10,31 +10,37 @@ import static cfd.backupper.MainForm.jProgressBar1;
 import cfd.backupper.fileoperation.DirContainer;
 import cfd.backupper.state.StartupConfig;
 import cfd.backupper.workers.CountAllFilesInDirectory;
+import java.awt.Component;
 import java.io.File;
 import javax.swing.JFileChooser;
-import javax.swing.table.DefaultTableModel;
+
+
 
 /**
  *
  * @author edm
+ * 
+ * This class can count files 
  */
 public class CountingFileChooser {
     
-    public CountingFileChooser(){
+    public CountingFileChooser(Component c){
          //Handle open button action.
         final JFileChooser fc = new JFileChooser();
-        final DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
+        //final DefaultTableModel model = (DefaultTableModel) jTable2.getModel();
         class MySpecialCounter extends CountAllFilesInDirectory{
+
+            public MySpecialCounter(File dir) {
+                super(dir);
+            }
+           
             @Override
             protected void done(){
-                model.setValueAt(MySpecialCounter.getCount(),model.getRowCount()-1, model.getColumnCount()-2);
+                //model.setValueAt(MySpecialCounter.getCount(),model.getRowCount()-1, model.getColumnCount()-2);
                 jProgressBar1.setIndeterminate(false);
             }
         }
-        
-        
-        
-        //int returnVal = fc.showOpenDialog(MainForm.this);
+
         fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         fc.setMultiSelectionEnabled(true);
         if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -44,18 +50,19 @@ public class CountingFileChooser {
                 File file1 = file[i];
                 DirContainer.addDir(file1);
                 StartupConfig.putSetting("BACKUPDIRS", DirContainer.getDirs());
-                jTextArea1.append(file1.getAbsolutePath()+"\n");
+                //jTextArea1.append(file1.getAbsolutePath()+"\n");
                 
-                model.addRow(new Object[]{file1.getAbsolutePath(), 0});
-                new MySpecialCounter().execute();
+                //model.addRow(new Object[]{file1.getAbsolutePath(), 0});
+                new MySpecialCounter(file1).execute();
             }
             
-            jTextArea1.setEnabled(false);
+            //jTextArea1.setEnabled(false);
             
-            this.invalidate();
-            this.repaint();
+            //this.invalidate();
+            //this.repaint();
             
             //new MySpecialCounter().execute();
+        }
  
     }
     

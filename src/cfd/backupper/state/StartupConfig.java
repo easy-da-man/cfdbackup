@@ -30,6 +30,10 @@ import org.json.simple.parser.ParseException;
  * @author edm
  */
 public class StartupConfig {
+    
+    public static String jsonNameOfBackupDirs = "BACKUP_DIRS";
+    public static String jsonNameOfTargetDirs = "TARGET_DIRS";
+    
     static final File targetDir = new File(System.getProperty("user.home")+File.separator+"UltraBackup");
     static final File confFile = new File(targetDir + File.separator + "ultrabackup.json");
     static JSONObject jo = new JSONObject();
